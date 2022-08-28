@@ -2,14 +2,16 @@ require("dotenv").config();
 const express = require("express");
 const cors = require('cors')
 
+const port = process.env.PORT || (process.env.PRODUCTION === "true" ? 80 : 3000); 
+
 // Express App Setup
 const app = express();
 app.use(cors());
-
+app.use(express.static('public'))
 
 const routes = require("./routes/routes");
 app.use("/api", routes);
 app.use(express.json());
-app.listen(3000, () => {
-    console.log(`Server Started at ${3000}`);
+app.listen(port, () => {
+    console.log(`Server Started at ${port}`);
 });
