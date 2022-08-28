@@ -9,13 +9,11 @@ collection = db.collection("houses");
 
 //Get all Method
 router.get("/getAll", async (req, res) => {
-    const page = parseInt(req.query.p) ?? 1;
-    const perPage = parseInt(req.query.perPage) ?? 20;
+    const page = parseInt(req.query.p) || 1;
+    const perPage = parseInt(req.query.perPage) || 20;
     const start = perPage * (page - 1);
     const q = req.query.q;
-
-
-    
+  
     
     const ag = [ { $facet: {
         listings: [{ $skip: start }, { $limit: perPage }],
