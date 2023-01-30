@@ -19,7 +19,6 @@ router.post("/getAll", async (req, res) => {
     const start = perPage * (page - 1);
 
     const aggregationChain = [
-        { $sort: { inserted: -1}},
         {
             $facet: {
                 listings: [{ $skip: start }, { $limit: perPage }],
@@ -46,6 +45,7 @@ router.post("/getAll", async (req, res) => {
 
     const aggregationResult = await collection.aggregate(aggregationChain).next();
 
+
     const result = {
         listings: aggregationResult.listings,
         count: aggregationResult.total[0]?.count ?? 0,
@@ -53,6 +53,20 @@ router.post("/getAll", async (req, res) => {
 
     res.json(result);
 });
+
+
+router.get("/listing/:listingId", async (req, res) => {
+
+    const query = {
+         id: req.params.listingId 
+    };
+
+    const result = await collection.findOne(query);
+
+
+    res.json(result);
+ }
+);
 
 router.get("/municipalities", async (req, res) => {
     const aggregationChain = listings.createFilter(req.query);

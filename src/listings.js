@@ -1,12 +1,11 @@
 const {Deal, Property } = require("./sreality.js");
 
+
+
 function createFilter(source) {
     aggregationChain = [];
 
-    // TODO: add deleted filter
-    const match = {
-       
-    };
+    const match = { };
 
     if (!source.deleted) {
         match.deleted = { $exists: false } ;
@@ -68,7 +67,28 @@ function createFilter(source) {
 
     if(and.length > 0) match.$and = and;
 
+    aggregationChain.push(createSortingAgregation(source.orderBy ?? []));
+
     return aggregationChain;
+}
+
+const orderKeyMappings = {
+    "priceDrop": "priceDropPercent",
+    "age" : "inserted",
+    "price" : "price",
+    "pricePerMeter" : "pricePerMeter",
+}
+
+function createSortingAgregation(orderByList) {
+    if(orderByList.length === 0) return  { $sort: { inserted: -1}}
+    orderByList = orderByList.map(o => o.split(":")).map(o => ({desc: o[2] === 'desc', key: o[1], order: parseInt(o[0])}));
+    
+    orderByList.sort((a,b) => a.order > b.order);
+    const sort = {};
+    for(var s of orderByList) {
+        sort [orderKeyMappings[s.key]] = s.desc ? -1 : 1;
+    }
+    return { $sort: sort };
 }
 
 module.exports = { createFilter };
