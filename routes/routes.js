@@ -49,6 +49,7 @@ router.post("/getAll", async (req, res) => {
     const result = {
         listings: aggregationResult.listings,
         count: aggregationResult.total[0]?.count ?? 0,
+        chain: aggregationChain,
     };
 
     res.json(result);

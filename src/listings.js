@@ -7,8 +7,11 @@ function createFilter(source) {
 
     const match = { };
 
-    if (!source.deleted) {
+    if (!source.deleted || source.deleted === 'active') {
         match.deleted = { $exists: false } ;
+    }
+    else if (source.deleted === 'deleted') {
+        match.deleted = { $exists: true } ;
     }
 
     const and = [];

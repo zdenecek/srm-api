@@ -1,0 +1,1 @@
+[{"$match":{"deleted":{"$exists":false},"$text":{"$search":"ahoj"}}},{"$sort":{"inserted":-1}},{"$facet":{"listings":[{"$skip":0},{"$limit":20}],"total":[{"$count":"count"}]}}]
